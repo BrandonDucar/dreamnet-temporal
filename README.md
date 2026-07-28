@@ -55,6 +55,13 @@ The worker accepts either a standard Temporal client profile or environment-only
 configuration. `TEMPORAL_API_KEY_FILE` is preferred because the credential stays
 out of the image, repository, Compose file, and Docker environment inspection.
 
+The current NUC installs Node through NVM. Non-interactive SSH and service
+automation must use the pinned runtime path explicitly:
+
+```bash
+export PATH=/home/nuc/.nvm/versions/node/v22.22.2/bin:$PATH
+```
+
 ## Operating Rules
 
 - Use a dedicated service account with the smallest namespace permission.
@@ -68,7 +75,7 @@ out of the image, repository, Compose file, and Docker environment inspection.
 
 ## Current Proof
 
-The NUC validation path completed seven tests and one Temporal Cloud workflow
+The NUC validation path completed twelve tests and one Temporal Cloud workflow
 using a Cerberus-approved checkout. Production workers should replace this sample
 workflow with bounded DreamNet workflows such as scraping campaigns, Proof Drop
 assembly, claim verification, Memory Grid projection, and scheduled agent work.
@@ -88,6 +95,11 @@ unknown or malformed -> fail closed as an incident
 Use the security receipt digest plus policy version as the stable workflow
 identity. `receipt-client` uses Temporal's conflict and reuse policies to return
 the existing decision instead of starting duplicate routing work.
+
+`fixtures/orange-security-receipt.json` is a non-secret conformance input. A
+successful route denies execution, requires human approval, selects escalation,
+and requests at least 15 specialist seats. Replaying the fixture under the same
+policy returns the existing workflow result.
 
 ## Upstream
 
