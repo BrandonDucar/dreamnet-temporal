@@ -73,6 +73,22 @@ using a Cerberus-approved checkout. Production workers should replace this sampl
 workflow with bounded DreamNet workflows such as scraping campaigns, Proof Drop
 assembly, claim verification, Memory Grid projection, and scheduled agent work.
 
+## Security Receipt Router
+
+The worker also exports a deterministic Receipt Router:
+
+```text
+green  -> admit
+yellow -> quarantine and remediate
+orange -> human-led high-risk escalation
+red    -> incident containment
+unknown or malformed -> fail closed as an incident
+```
+
+Use the security receipt digest plus policy version as the stable workflow
+identity. `receipt-client` uses Temporal's conflict and reuse policies to return
+the existing decision instead of starting duplicate routing work.
+
 ## Upstream
 
 This repository began as Temporal's TypeScript money-transfer tutorial:

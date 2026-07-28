@@ -6,6 +6,8 @@ import { ApplicationFailure } from '@temporalio/common';
 import type * as activities from './activities';
 import type { PaymentDetails } from './shared';
 
+export { routeSecurityReceipt } from './receipt-router';
+
 export async function moneyTransfer(details: PaymentDetails): Promise<string> {
   // Get the Activities for the Workflow and set up the Activity Options.
   const { withdraw, deposit, refund } = proxyActivities<typeof activities>({
