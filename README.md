@@ -1,17 +1,79 @@
-# Temporal Money Transfer example in TypeScript
+# DreamNet Temporal Worker
 
-This is the companion code for the tutorial [Run your first Temporal Application with TypeScript](https://learn.temporal.io/getting_started/typescript/first_program_in_typescript).
+This repository is DreamNet's small, independently deployable Temporal worker
+reference. It proves that a worker on the NUC can execute durable workflows
+against Temporal Cloud without running a Temporal server on the NUC.
 
-### Running this sample:
+The included money-transfer workflow is an official Temporal learning sample.
+It is a connectivity and recovery test, not financial software.
 
-1. Make sure Temporal Server is running locally (see the [quick install guide](https://docs.temporal.io/server/quick-install/)).
-1. `npm install` to install dependencies.
-1. `npm run worker` to start the Worker.
-1. In another shell, `npm run client` to run the Workflow Client.
+## Architecture
 
-The Workflow will return:
+```text
+DreamNet app or agent
+        |
+        | starts a workflow
+        v
+Temporal Cloud namespace
+        |
+        | durable task queue
+        v
+NUC Docker worker
+        |
+        +-- activities
+        +-- retries
+        +-- receipts and application events
+```
+
+Temporal owns workflow history, timers, retries, and task delivery. GitHub owns
+source and deployable definitions. GitGrid owns durable evidence artifacts.
+Databases and search engines may project those artifacts but are not canonical.
+
+## Local Verification
+
+Run Cerberus before dependency installation:
 
 ```bash
-Started Workflow workflow-OyIhuWr6X4opgqtYnhxuX with RunID a85055c8-3fce-466e-b4f6-8f66c16614e6
-Transfer complete (transaction IDs: w1328871163, d0590412617)
+git clone https://github.com/BrandonDucar/dreamnet-cerberus.git
+node dreamnet-cerberus/scripts/cerberus.mjs gate .
+npm ci
+npm test
+npm run build
 ```
+
+## NUC Deployment
+
+Store the Temporal service-account key outside the repository with mode `600`.
+Then create a local `.env` from `example.env` and run:
+
+```bash
+docker compose --env-file .env -f compose.nuc.yml up -d --build
+docker compose --env-file .env -f compose.nuc.yml ps
+```
+
+The worker accepts either a standard Temporal client profile or environment-only
+configuration. `TEMPORAL_API_KEY_FILE` is preferred because the credential stays
+out of the image, repository, Compose file, and Docker environment inspection.
+
+## Operating Rules
+
+- Use a dedicated service account with the smallest namespace permission.
+- Rotate worker API keys and overlap old/new keys during deployment.
+- Give each workload family its own task queue.
+- Keep workflow inputs small; store large artifacts in GitGrid or object storage.
+- Make every activity idempotent because retries are expected behavior.
+- Do not put secrets, personal data, or large binary artifacts in workflow input.
+- Pin deploy images by digest after the first production build.
+- Run Cerberus again whenever the source commit or dependency lock changes.
+
+## Current Proof
+
+The NUC validation path completed seven tests and one Temporal Cloud workflow
+using a Cerberus-approved checkout. Production workers should replace this sample
+workflow with bounded DreamNet workflows such as scraping campaigns, Proof Drop
+assembly, claim verification, Memory Grid projection, and scheduled agent work.
+
+## Upstream
+
+This repository began as Temporal's TypeScript money-transfer tutorial:
+`temporalio/money-transfer-project-template-ts`.

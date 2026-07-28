@@ -1,0 +1,40 @@
+services:
+  temporal-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dreamnet/temporal-worker:local
+    restart: unless-stopped
+    init: true
+    read_only: true
+    environment:
+      TEMPORAL_ADDRESS: ${TEMPORAL_ADDRESS}
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE}
+      TEMPORAL_TASK_QUEUE: ${TEMPORAL_TASK_QUEUE:-dreamnet-default}
+      TEMPORAL_API_KEY_FILE: /run/secrets/temporal_api_key
+      TEMPORAL_HEALTH_FILE: /tmp/dreamnet-temporal-ready
+    secrets:
+      - temporal_api_key
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 768m
+    cpus: 1.0
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - require('fs').accessSync('/tmp/dreamnet-temporal-ready')
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+secrets:
+  temporal_api_key:
+    file: ${TEMPORAL_API_KEY_FILE_HOST}

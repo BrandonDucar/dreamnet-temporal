@@ -1,18 +1,14 @@
 // @@@SNIPSTART money-transfer-project-template-ts-worker
 import { NativeConnection, Worker } from '@temporalio/worker';
-import { loadClientConnectConfig } from '@temporalio/envconfig';
+import { writeFileSync, rmSync } from 'node:fs';
 import * as activities from './activities';
 import { taskQueueName } from './shared';
+import { loadDreamNetTemporalConfig } from './temporal-config';
 
 async function run() {
-  // Connect to Temporal Cloud by loading the "cloud-setup" profile from the
-  // shared Temporal client config (temporal.toml), which supplies the Cloud
-  // address, namespace, TLS settings, and API key.
-  const { connectionOptions, namespace } = loadClientConnectConfig({ profile: 'cloud-setup' });
+  const { connectionOptions, namespace } = loadDreamNetTemporalConfig();
   const connection = await NativeConnection.connect(connectionOptions);
 
-  // Register Workflows and Activities with the Worker and connect to
-  // the Temporal server.
   const worker = await Worker.create({
     connection,
     workflowsPath: require.resolve('./workflows'),
@@ -21,8 +17,16 @@ async function run() {
     taskQueue: taskQueueName,
   });
 
-  // Start accepting tasks from the Task Queue.
-  await worker.run();
+  const healthFile =
+    process.env.TEMPORAL_HEALTH_FILE || '/tmp/dreamnet-temporal-ready';
+  writeFileSync(healthFile, new Date().toISOString(), { mode: 0o600 });
+
+  try {
+    await worker.run();
+  } finally {
+    rmSync(healthFile, { force: true });
+    await connection.close();
+  }
 }
 
 run().catch((err) => {
