@@ -2,10 +2,8 @@ import assert from 'node:assert';
 import { after, before, describe, it } from 'mocha';
 import { TestWorkflowEnvironment } from '@temporalio/testing';
 import { Worker } from '@temporalio/worker';
-import {
-  routeSecurityReceipt,
-  type SecurityReceiptInput,
-} from '../receipt-router';
+import { routeSecurityReceipt } from '../workflows';
+import type { SecurityReceiptInput } from '../receipt-router';
 
 const digest = (character: string) => `sha256:${character.repeat(64)}`;
 
@@ -44,7 +42,7 @@ describe('Security Receipt Router workflow', function () {
     const worker = await Worker.create({
       connection: nativeConnection,
       taskQueue,
-      workflowsPath: require.resolve('../receipt-router'),
+      workflowsPath: require.resolve('../workflows'),
     });
 
     return worker.runUntil(() =>
