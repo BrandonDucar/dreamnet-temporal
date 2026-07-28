@@ -5,7 +5,6 @@ services:
       dockerfile: Dockerfile
     image: dreamnet/temporal-worker:local
     restart: unless-stopped
-    init: true
     read_only: true
     environment:
       TEMPORAL_ADDRESS: ${TEMPORAL_ADDRESS}
