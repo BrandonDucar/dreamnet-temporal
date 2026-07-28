@@ -1,16 +1,13 @@
 // @@@SNIPSTART money-transfer-project-template-ts-start-workflow
 import { Connection, Client } from '@temporalio/client';
-import { loadClientConnectConfig } from '@temporalio/envconfig';
 import { moneyTransfer } from './workflows';
 import type { PaymentDetails } from './shared';
 
 import { taskQueueName } from './shared';
+import { loadDreamNetTemporalConfig } from './temporal-config';
 
 async function run() {
-  // Connect to Temporal Cloud by loading the "cloud-setup" profile from the
-  // shared Temporal client config (temporal.toml), which supplies the Cloud
-  // address, namespace, TLS settings, and API key.
-  const { connectionOptions, namespace } = loadClientConnectConfig({ profile: 'cloud-setup' });
+  const { connectionOptions, namespace } = loadDreamNetTemporalConfig();
   const connection = await Connection.connect(connectionOptions);
   const client = new Client({ connection, namespace });
 
@@ -36,7 +33,7 @@ async function run() {
   );
   console.log(await handle.result());
 
-  connection.close()
+  await connection.close();
 }
 
 run().catch((err) => {
