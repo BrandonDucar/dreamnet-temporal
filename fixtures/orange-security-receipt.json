@@ -1,0 +1,16 @@
+{
+  "receiptId": "cerberus-conformance-orange",
+  "receiptDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "artifactDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "sourceCommit": "cccccccccccccccccccccccccccccccccccccccc",
+  "policyVersion": "cerberus-policy@1",
+  "verdict": "orange",
+  "riskScore": 42,
+  "findings": [
+    {
+      "severity": "high",
+      "rule": "ci.action-unpinned"
+    }
+  ]
+}
+
