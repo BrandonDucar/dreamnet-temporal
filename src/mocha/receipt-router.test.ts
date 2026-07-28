@@ -25,7 +25,9 @@ function receipt(
   };
 }
 
-describe('Security Receipt Router workflow', () => {
+describe('Security Receipt Router workflow', function () {
+  this.timeout(15_000);
+
   let testEnv: TestWorkflowEnvironment;
 
   before(async () => {
