@@ -7,10 +7,11 @@ import * as activities from '../activities';
 import { moneyTransfer } from '../workflows';
 import type { PaymentDetails } from '../shared';
 
-describe('Money Transfer workflow', () => {
+describe('Money Transfer workflow', function () {
+  this.timeout(30_000);
+
   let testEnv: TestWorkflowEnvironment;
-  before(async function () {
-    // this.timeout(_000);
+  before(async () => {
     testEnv = await TestWorkflowEnvironment.createLocal();
   });
 
