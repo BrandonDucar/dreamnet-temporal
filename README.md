@@ -1,17 +1,87 @@
-# Temporal Money Transfer example in TypeScript
+# DreamNet Temporal Durability Lab
 
-This is the companion code for the tutorial [Run your first Temporal Application with TypeScript](https://learn.temporal.io/getting_started/typescript/first_program_in_typescript).
+A public reference harness for the durable workflow patterns DreamNet uses to coordinate long-running agent work.
 
-### Running this sample:
+This repository currently contains a small TypeScript money-transfer workflow adapted from Temporal's starter material. Its purpose is narrow: make retries, compensation, worker separation, and deterministic workflow execution easy to inspect before those patterns are applied to DreamNet assignments, receipts, quorum gates, and Nexus operations.
 
-1. Make sure Temporal Server is running locally (see the [quick install guide](https://docs.temporal.io/server/quick-install/)).
-1. `npm install` to install dependencies.
-1. `npm run worker` to start the Worker.
-1. In another shell, `npm run client` to run the Workflow Client.
+> Status: reference harness, not the production DreamNet control plane.
 
-The Workflow will return:
+## Why Temporal is in DreamNet
+
+DreamNet uses Temporal for work that must survive process restarts, network interruptions, and worker replacement:
+
+- durable assignment execution
+- bounded retries and explicit non-retryable failures
+- human approval waits
+- compensation after partial failure
+- receipt and Proof Drop handoffs
+- scheduled DreamLoops
+- Nexus operations across local, cloud, and edge workers
+
+Temporal owns durable execution history. DreamNet remains responsible for identity, policy, evidence, approvals, and receipts.
+
+## What This Example Demonstrates
+
+The sample workflow performs three activities:
+
+1. withdraw
+2. deposit
+3. refund when deposit fails
+
+That small flow demonstrates the same primitives required by a governed agent workflow: retry policy, fault isolation, compensation, and replay-safe orchestration.
+
+## Quick Start
+
+Requirements:
+
+- Node.js 18 or later
+- a local Temporal development server
 
 ```bash
-Started Workflow workflow-OyIhuWr6X4opgqtYnhxuX with RunID a85055c8-3fce-466e-b4f6-8f66c16614e6
-Transfer complete (transaction IDs: w1328871163, d0590412617)
+npm install
+npm run build
+npm test
+npm run worker
 ```
+
+In another terminal:
+
+```bash
+npm run client
+```
+
+## Production Direction
+
+The production integration is being developed around:
+
+```text
+intake
+  -> signed assignment
+  -> policy and budget gate
+  -> Temporal workflow
+  -> worker activity
+  -> independent verification
+  -> receipt / Proof Drop
+  -> human or policy approval
+  -> publication
+```
+
+Public milestones for this repository:
+
+- replace tutorial-only banking adapters with a generic assignment contract
+- add deterministic receipt emission
+- add approval and timeout examples
+- add failure/replay fixtures
+- add a signed Nexus operation example
+- publish an architecture diagram and deployment guide
+
+## Related Projects
+
+- [DreamNet](https://github.com/BrandonDucar/DreamNet)
+- [DreamLoops](https://github.com/BrandonDucar/Dreamloops)
+- [Spore SDK](https://github.com/BrandonDucar/dreamnet-spore-sdk)
+- [Warper Keeper](https://warper-keeper.dreamnet.ink)
+
+## License and Upstream Credit
+
+The current sample began from Temporal's TypeScript getting-started example. Temporal documentation and SDK licensing remain the authoritative upstream references.
