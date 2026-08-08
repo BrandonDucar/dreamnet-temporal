@@ -1,0 +1,14 @@
+{
+  "name": "dreamnet-studio-guardian",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/run.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "^1.30.0",
+    "@modelcontextprotocol/sdk": "^1.24.0"
+  }
+}
