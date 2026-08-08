@@ -1,5 +1,7 @@
 # DreamNet Temporal Durability Lab
 
+> **Agentic Cinema submission:** [DreamNet Studio Guardian](agentic-cinema/README.md) uses Gemini and live Grafana MCP calls to investigate media-production incidents and emit digest-bound receipts.
+
 A public reference harness for the durable workflow patterns DreamNet uses to coordinate long-running agent work.
 
 This repository currently contains a small TypeScript money-transfer workflow adapted from Temporal's starter material. Its purpose is narrow: make retries, compensation, worker separation, and deterministic workflow execution easy to inspect before those patterns are applied to DreamNet assignments, receipts, quorum gates, and Nexus operations.
