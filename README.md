@@ -84,4 +84,19 @@ Public milestones for this repository:
 
 ## License and Upstream Credit
 
-The current sample began from Temporal's TypeScript getting-started example. Temporal documentation and SDK licensing remain the authoritative upstream references.
+This repository is adapted from Temporal's
+[TypeScript money-transfer template](https://github.com/temporalio/money-transfer-project-template-ts).
+Its upstream source attribution is preserved in NOTICE.md and Git history.
+
+Licensing is explicitly scoped:
+
+- The new original licensing documentation listed in LICENSE_SCOPE.md is
+  Apache-2.0; the full terms are in LICENSE.
+- The inherited template source and adaptations have no located license grant
+  in the inspected upstream snapshot. They are not relicensed Apache-2.0 here.
+- Temporal SDK and other dependencies retain their own licenses; those licenses
+  do not automatically grant rights to the starter template.
+
+See [LICENSE_SCOPE.md](LICENSE_SCOPE.md) and [NOTICE.md](NOTICE.md) for exact
+commit provenance, covered documentation and the remaining upstream rights gap.
+No current runtime or production licensing clearance is claimed.
